@@ -48,8 +48,24 @@ p
 ![plot of chunk histogram](figure/histogram-1.png) 
 
 - Mean of total number of step taken per day is 10,766.19 steps.
+
+```r
+format(mean(steps.day$tot_steps),nsmall=2,big.mark=',')
+```
+
+```
+## [1] "10,766.19"
+```
+
 - Median of total number of step taken per day is 10,765 steps.
 
+```r
+format(median(steps.day$tot_steps),nsmall=2,big.mark=',')
+```
+
+```
+## [1] "10,765"
+```
 ### What is the average daily activity pattern?
 
 **Time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)**
@@ -100,6 +116,15 @@ data.NA <- data[is.na(steps)==TRUE,]
 **Total number of rows with missing value is 2,304**
 
 ```r
+format(nrow(data.NA),big.mark=',')
+```
+
+```
+## [1] "2,304"
+```
+
+
+```r
 #The strategy is filling the data with the average for the same timeframe
 # calculation of the missing date
 data.filled=merge(data.NA,time_interval,by='interval',all.x=TRUE)
@@ -119,8 +144,23 @@ p
 ![plot of chunk filling_missing_values](figure/filling_missing_values-1.png) 
 
 - The new Mean of total number of step taken per day is 10,766.19 steps.
+
+```r
+format(mean(steps.derived.day$tot_steps),nsmall=2,big.mark=',')
+```
+
+```
+## [1] "10,766.19"
+```
 - The new Median of total number of step taken per day is 10,766.19 steps.
 
+```r
+format(median(steps.derived.day$tot_steps),nsmall=2,big.mark=',')
+```
+
+```
+## [1] "10,766.19"
+```
 With the new derived data, the mean remains the same and there is slight increase in the median value.
 
 
