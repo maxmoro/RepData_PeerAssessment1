@@ -8,13 +8,15 @@ output: html_document
 # Reproducible Research Peer Assessment 1
 
 ### Download and Loading Dataset
-```{r setup, warning=FALSE}
+
+```r
 #install.packages(c('ggplot2','data.table'))
 library(ggplot2)
 library(data.table)
 ```
   
-```{r load, warning=FALSE}
+
+```r
 setInternet2(use = TRUE)
 download.file('https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip','activity.zip')
 file=unz("activity.zip",filename='activity.csv')
@@ -30,7 +32,8 @@ For this part of the assignment, you can ignore the missing values in the datase
 
 #### Histogram of the total number of steps taken each day
 
-```{r histogram}
+
+```r
 #aggregate tot steps per day
 steps.day = data[is.na(steps)==FALSE,list(tot_steps = sum(steps,na.rm=TRUE)),by=date]
 #plotting
@@ -42,13 +45,16 @@ p <-  ggplot(steps.day,aes(x=tot_steps)) +
 p
 ```
 
-- Mean of total number of step taken per day is `r format(mean(steps.day$tot_steps),nsmall=2,big.mark=',')` steps.
-- Median of total number of step taken per day is `r format(median(steps.day$tot_steps),nsmall=2,big.mark=',')` steps.
+![plot of chunk histogram](figure/histogram-1.png) 
+
+- Mean of total number of step taken per day is 10,766.19 steps.
+- Median of total number of step taken per day is 10,765 steps.
 
 ### What is the average daily activity pattern?
 
 **Time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)**
-```{r time_series}
+
+```r
 # aggregate steps by interval
 time_interval <- data[is.na(steps)==FALSE,list(steps = mean(steps,na.rm=TRUE)),by=interval]
 #plot
@@ -60,9 +66,17 @@ p <-  ggplot(time_interval, aes(x=interval, y=steps)) +
 p
 ```
 
+![plot of chunk time_series](figure/time_series-1.png) 
+
 **The 5-minute interval, on average across all the days in the dataset, that contains the maximum number of step is:**
-```{r}
+
+```r
 time_interval[which.max(time_interval$steps)]
+```
+
+```
+##    interval    steps
+## 1:      835 206.1698
 ```
 
 
@@ -78,12 +92,14 @@ Note that there are a number of days/intervals where there are missing values (c
 
 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-```{r missing_values}
+
+```r
 #  rows with NA
 data.NA <- data[is.na(steps)==TRUE,]
 ```
-**Total number of rows with missing value is `r format(nrow(data.NA),big.mark=',')`**
-```{r filling_missing_values}
+**Total number of rows with missing value is 2,304**
+
+```r
 #The strategy is filling the data with the average for the same timeframe
 # calculation of the missing date
 data.filled=merge(data.NA,time_interval,by='interval',all.x=TRUE)
@@ -100,8 +116,10 @@ p <-  ggplot(steps.derived.day,aes(x=tot_steps)) +
 p
 ```
 
-- The new Mean of total number of step taken per day is `r format(mean(steps.derived.day$tot_steps),nsmall=2,big.mark=',')` steps.
-- The new Median of total number of step taken per day is `r format(median(steps.derived.day$tot_steps),nsmall=2,big.mark=',')` steps.
+![plot of chunk filling_missing_values](figure/filling_missing_values-1.png) 
+
+- The new Mean of total number of step taken per day is 10,766.19 steps.
+- The new Median of total number of step taken per day is 10,766.19 steps.
 
 With the new derived data, the mean remains the same and there is slight increase in the median value.
 
@@ -112,7 +130,8 @@ With the new derived data, the mean remains the same and there is slight increas
 
 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
-```{r patterns}
+
+```r
 # calculating day of the week 
 data$weekday<- weekdays(as.Date(data$date, "%Y-%m-%d"))
 # Calculating type of day (weekend or weekday)
@@ -129,4 +148,6 @@ p <-  ggplot(time_interval, aes(x=interval, y=steps)) +
       facet_wrap(~ weekday.type, ncol=1)
 p
 ```
+
+![plot of chunk patterns](figure/patterns-1.png) 
 
